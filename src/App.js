@@ -1,25 +1,24 @@
-import logo from './logo.svg';
+import React,{useState,useEffect, useRef} from 'react';
+import ReactDOM from 'react-dom'
+import myAPI from './apis/myAPI';
 import './App.css';
+import useAsync from './hooks/useAsync';
 
-function App() {
+
+const App = () => {
+  const [{data:employees,loading,error},fetchEmployee] = useAsync(myAPI);
+  
+  useEffect(()=>{
+    fetchEmployee();
+  },[])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {loading ? <h1>Loading</h1> :''}
+      {error ? <h1>error!</h1> : ''}
+      {employees? <ul>{employees.map(employee=><li key={employee.id}><div>{employee.name}</div><div>{employee.email}</div></li>)}</ul> : ''}
     </div>
   );
-}
+};
 
 export default App;
